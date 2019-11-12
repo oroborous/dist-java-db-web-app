@@ -43,17 +43,6 @@
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
-    <!-- Enable transactional annotations -->
-    <tx:annotation-driven transaction-manager="myTransactionManager"/>
-
-    <!-- END NEW HIBERNATE CONFIGURATION -->
-
-    <!-- Support for component scanning -->
-    <context:component-scan base-package="edu.wctc.dao, edu.wctc.controller, edu.wctc.service"/>
-
-    <!-- Support for conversion, formatting, and validation -->
-    <mvc:annotation-driven conversion-service="myConversionService"/>
-
     <!-- Beans for converting from Strings to entity objects -->
     <bean id="myConversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
@@ -67,6 +56,17 @@
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="10000000"/>
     </bean>
+
+    <!-- Enable transactional annotations -->
+    <tx:annotation-driven transaction-manager="myTransactionManager"/>
+
+    <!-- END NEW HIBERNATE CONFIGURATION -->
+
+    <!-- Support for component scanning -->
+    <context:component-scan base-package="edu.wctc.dao, edu.wctc.controller, edu.wctc.service"/>
+
+    <!-- Support for conversion, formatting, and validation -->
+    <mvc:annotation-driven conversion-service="myConversionService"/>
 
     <!-- Configure Spring MVC view resolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

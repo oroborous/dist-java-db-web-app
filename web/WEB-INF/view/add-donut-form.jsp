@@ -15,9 +15,8 @@
 
 <div id="container">
     <h3>Save Donut</h3>
-    <form:form action="saveDonut" enctype="multipart/form-data" modelAttribute="donut" method="post">
+    <form:form action="save" enctype="multipart/form-data" modelAttribute="donut" method="post">
         <table>
-            <tbody>
             <tr>
                 <td><label>Name</label></td>
                 <td><form:input path="name"/>
@@ -44,7 +43,6 @@
                 <td></td>
                 <td><input type="submit" value="Save" class="save"></td>
             </tr>
-            </tbody>
         </table>
     </form:form>
 

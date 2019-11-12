@@ -19,11 +19,8 @@ public class DonutDAOImpl implements DonutDAO {
         // Get current Hibernate session
         Session session = sessionFactory.getCurrentSession();
 
-        // Create a query
-        Query<Donut> query = session.createQuery("from Donut", Donut.class);
-
         // Get list of donuts from query
-        List<Donut> donutList = query.getResultList();
+        List<Donut> donutList = session.createQuery("from Donut", Donut.class).getResultList();
 
         // Return results
         return donutList;

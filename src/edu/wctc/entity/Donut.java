@@ -115,11 +115,9 @@ public class Donut {
     }
 
     public String getImagePath() {
-        if (imageFilename == null || shop == null) {
+        if (imageFilename == null || shop == null)
             return "none.jpg";
-        } else {
-            return shop.getImageDirectory() + "/" + imageFilename;
-        }
+        return shop.getImageDirectory() + "/" + imageFilename;
     }
 
     public Date getDateAdded() {

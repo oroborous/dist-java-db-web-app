@@ -4,7 +4,6 @@ package edu.wctc.controller;
 import edu.wctc.entity.Donut;
 import edu.wctc.service.DonutService;
 import edu.wctc.service.DonutShopService;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
 import java.util.List;
 
 @Controller
@@ -56,47 +54,12 @@ public class DonutController {
         return "add-donut-form";
     }
 
-    @PostMapping("/saveDonut")
+    @PostMapping("/save")
     public String saveDonut(@RequestParam("image") MultipartFile file,
                             @Valid @ModelAttribute("donut") Donut theDonut,
                             BindingResult bindingResult,
                             HttpServletRequest request,
                             Model theModel) {
-        String fileName = null;
-
-        if (!file.isEmpty()) {
-
-            try {
-                // Find the image subfolder for this donut shop
-                String donutShopFolder = theDonut.getShop().getImageDirectory();
-
-                // Find the complete path of the application
-                String appPath = request.getServletContext().getRealPath("/");
-
-                // Need to store the image in the artifact directory...
-                // (where the application is currently running)
-                String artifactPath = appPath + "WEB-INF\\resources\\img\\" + donutShopFolder;
-
-                // ... and the source code directory
-                // (so it gets checked into GitHub)
-                String sourcePath = appPath + "..\\..\\..\\web\\WEB-INF\\resources\\img\\" + donutShopFolder;
-
-                // What is the name of the uploaded file?
-                fileName = file.getOriginalFilename();
-
-                // Transfer the uploaded file to the artifact directory
-                File imageFile = new File(artifactPath, fileName);
-                file.transferTo(imageFile);
-
-                // Copy the uploaded file to the source directory
-                File copyOfImage = new File(sourcePath, fileName);
-                FileUtils.copyFile(imageFile, copyOfImage);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         // Any validation errors?
         if (bindingResult.hasErrors()) {
             // Put list of donut shops back in the new model
@@ -104,16 +67,16 @@ public class DonutController {
 
             // Send back to form with error messages
             return "add-donut-form";
-        } else {
-            // Set the filename in the entity object so Hibernate can save it to the database
-            theDonut.setImageFilename(fileName);
-
-            // Use the service to save the donut
-            donutService.saveDonut(theDonut);
-
-            // Redirect back to the donut list
-            return "redirect:/donut/list";
         }
+
+        // Find the complete path of the application
+        String applicationPath = request.getServletContext().getRealPath("/");
+
+        // Use the service to save the donut
+        donutService.saveDonut(theDonut, file, applicationPath);
+
+        // Redirect back to the donut list
+        return "redirect:/donut/list";
     }
 
     @InitBinder

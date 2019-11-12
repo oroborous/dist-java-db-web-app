@@ -3,7 +3,6 @@ package edu.wctc.dao;
 import edu.wctc.entity.DonutShop;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +18,8 @@ public class DonutShopDAOImpl implements DonutShopDAO {
         // Get current Hibernate session
         Session session = sessionFactory.getCurrentSession();
 
-        // Create a query
-        Query<DonutShop> query = session.createQuery("from DonutShop", DonutShop.class);
-
         // Get list of donut shops from query
-        List<DonutShop> donutShopList = query.getResultList();
+        List<DonutShop> donutShopList = session.createQuery("from DonutShop", DonutShop.class).getResultList();
 
         // Return results
         return donutShopList;
