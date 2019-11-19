@@ -1,8 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd">
+    <!-- BEGIN SECURITY CONFIGURATION -->
+
+    <security:http use-expressions="true" authentication-manager-ref="myAuthenticationManager" >
+        <security:intercept-url pattern="/donut/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/donut/user/**" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/resources/**" access="permitAll()"/>
+        <security:intercept-url pattern="/**" access="permitAll()" />
+
+        <!-- We don't need to write a mapping for "authenticate"
+        Spring understands how to process login if we name everything correctly -->
+        <security:form-login
+                login-page="/showLoginForm"
+                login-processing-url="/authenticate"
+                authentication-failure-url="/showLoginForm?error=true"
+                username-parameter="username"
+                password-parameter="password"
+                default-target-url="/donut/list"/>
+        <security:logout logout-url="/logout"
+                         logout-success-url="/showLoginForm?logout=true"/>
+    </security:http>
+
+    <security:authentication-manager id="myAuthenticationManager" >
+        <security:authentication-provider>
+            <security:user-service id="myUserService">
+                <security:user name="user" password="p" authorities="ROLE_USER"/>
+                <security:user name="admin" password="p" authorities="ROLE_USER,ROLE_ADMIN"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+
+
+    <bean id="encoder"
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+    </bean>
+
+    <!-- END SECURITY CONFIGURATION -->
+
     <!-- BEGIN NEW HIBERNATE CONFIGURATION -->
 
     <!-- Data source and connection pool bean -->
@@ -21,15 +71,15 @@
 
         <!-- these are connection pool properties for C3P0 -->
         <property name="initialPoolSize" value="5"/>
-        <property name="minPoolSize" value="5" />
-        <property name="maxPoolSize" value="20" />
-        <property name="maxIdleTime" value="30000" />
+        <property name="minPoolSize" value="5"/>
+        <property name="maxPoolSize" value="20"/>
+        <property name="maxIdleTime" value="30000"/>
     </bean>
 
     <!-- Hibernate session factory bean -->
     <bean id="mySessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="myDataSource"/>
-        <property name="packagesToScan" value="edu.wctc.entity" />
+        <property name="packagesToScan" value="edu.wctc.entity"/>
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.DerbyTenSevenDialect</prop>
@@ -48,6 +98,7 @@
         <property name="converters">
             <list>
                 <bean class="edu.wctc.service.converter.StringToDonutShopConverter"/>
+                <bean class="edu.wctc.service.converter.StringToDateConverter"/>
             </list>
         </property>
     </bean>

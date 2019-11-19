@@ -46,6 +46,10 @@ tr {
     text-align: left;
 }
 
+td {
+    vertical-align: top;
+}
+
 .error {
 	color: red;
 	font-size: x-small;

@@ -31,7 +31,43 @@ public class DonutDAOImpl implements DonutDAO {
         // Get current Hibernate session
         Session session = sessionFactory.getCurrentSession();
 
-        // save the donut
-        session.save(theDonut);
+        // save/update the donut
+        session.saveOrUpdate(theDonut);
+    }
+
+    @Override
+    public Donut getDonut(int theId) {
+        // Get current Hibernate session
+        Session session = sessionFactory.getCurrentSession();
+
+        return session.get(Donut.class, theId);
+    }
+
+    @Override
+    public void deleteDonut(int theId) {
+        // Get current Hibernate session
+        Session session = sessionFactory.getCurrentSession();
+
+        // Delete object using primary key
+        Query query = session.createQuery("delete from Donut where id = :doomedDonutId");
+        // Set parameter value
+        query.setParameter("doomedDonutId", theId);
+
+        // Perform the delete
+        query.executeUpdate();
+    }
+
+    @Override
+    public List<Donut> getDonutsByName(String theSearchTerm) {
+        // Get current Hibernate session
+        Session session = sessionFactory.getCurrentSession();
+
+        // Add wildcards and make search term lowercase (for case insensitivity)
+        theSearchTerm = "%" + theSearchTerm.toLowerCase() + "%";
+
+        Query<Donut> query = session.createQuery("from Donut where lower(name) like :nameToSearch");
+        query.setParameter("nameToSearch", theSearchTerm);
+
+        return query.getResultList();
     }
 }

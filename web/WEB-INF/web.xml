@@ -3,13 +3,34 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+    <!--
+      - Location of the XML file that defines the root application context
+      - Applied by ContextLoaderListener.
+      -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml</param-value>
     </context-param>
+
+    <!-- Requires all requests be filtered through Spring security -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--
+	  - Loads the root application context of this web app at startup.
+	  - The application context is then available via
+	  - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+	-->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
     <!-- This is the front controller -->
     <servlet>
         <!-- matches servlet-name below -->
@@ -23,4 +44,8 @@
         <!-- Meaning all web requests are handled by dispatcher servlet -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    
+    <!--<error-page>
+        <location>/errors</location>
+    </error-page>-->
 </web-app>

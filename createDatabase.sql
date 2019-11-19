@@ -191,3 +191,23 @@ values (3, 2);
 
 insert into donut_shop_city (city_id, shop_id)
 values (5, 2);
+
+create table "USER"
+(
+    user_id int generated always as identity
+        constraint user_pk
+            primary key,
+    username varchar(20) not null,
+    password varchar(100) not null,
+    password_plain_text varchar(20) not null
+);
+
+create unique index user_username_uindex
+    on "USER" (username);
+
+create table USER_ROLE
+(
+    user_id int         not null
+        references "USER" (user_id),
+    role    varchar(20) not null
+);

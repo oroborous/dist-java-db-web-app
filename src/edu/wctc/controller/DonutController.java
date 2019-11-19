@@ -29,10 +29,16 @@ public class DonutController {
     @Autowired
     private DonutShopService donutShopService;
 
-    @GetMapping("/list")
-    public String listDonuts(HttpServletRequest request, Model theModel) {
-        System.out.println(request.getServletContext().getRealPath("/"));
+    @GetMapping("/user/delete")
+    public String deleteDonut(@RequestParam("donutId") int theId) {
+        // Delete the donut
+        donutService.deleteDonut(theId);
 
+        return "redirect:/donut/list";
+    }
+
+    @GetMapping("/list")
+    public String listDonuts(Model theModel) {
         // Get donuts from service
         List<Donut> donutList = donutService.getDonuts();
 
@@ -43,7 +49,7 @@ public class DonutController {
         return "list-donuts";
     }
 
-    @GetMapping("/showAddDonutForm")
+    @RequestMapping("/user/showAddDonutForm")
     public String showAddDonutForm(Model theModel) {
         Donut theDonut = new Donut();
 
@@ -51,10 +57,26 @@ public class DonutController {
 
         theModel.addAttribute("donutShops", donutShopService.getDonutShops());
 
-        return "add-donut-form";
+        return "donut-form";
     }
 
-    @PostMapping("/save")
+    @RequestMapping("/user/showUpdateDonutForm")
+    public String showUpdateDonutForm(@RequestParam("donutId") int theId,
+                                      Model theModel) {
+        // Get donut from the database
+        Donut theDonut = donutService.getDonut(theId);
+
+        // Set donut as a model attribute to pre-populate the form
+        theModel.addAttribute("donut", theDonut);
+
+        theModel.addAttribute("donutShops", donutShopService.getDonutShops());
+
+        // Return the view
+        return "donut-form";
+    }
+
+
+    @PostMapping("/user/save")
     public String saveDonut(@RequestParam("image") MultipartFile file,
                             @Valid @ModelAttribute("donut") Donut theDonut,
                             BindingResult bindingResult,
@@ -62,11 +84,14 @@ public class DonutController {
                             Model theModel) {
         // Any validation errors?
         if (bindingResult.hasErrors()) {
+            // Display the errors in the console
+            System.out.println(bindingResult);
+
             // Put list of donut shops back in the new model
             theModel.addAttribute("donutShops", donutShopService.getDonutShops());
 
             // Send back to form with error messages
-            return "add-donut-form";
+            return "donut-form";
         }
 
         // Find the complete path of the application
@@ -77,6 +102,15 @@ public class DonutController {
 
         // Redirect back to the donut list
         return "redirect:/donut/list";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("searchTerm") String theSearchTerm, Model theModel) {
+        List<Donut> matchingDonuts = donutService.getDonutsByName(theSearchTerm);
+
+        theModel.addAttribute("donuts", matchingDonuts);
+
+        return "list-donuts";
     }
 
     @InitBinder

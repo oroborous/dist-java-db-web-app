@@ -11,10 +11,13 @@ public class DonutReview {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="review_id")
     private int id;
+
     @Column(name="review")
     private String review;
+
     @Column(name="stars")
     private double stars;
+
     @Column(name="review_date")
     private Date reviewDate;
 

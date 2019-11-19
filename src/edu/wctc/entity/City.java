@@ -25,6 +25,10 @@ public class City {
     inverseJoinColumns = @JoinColumn(name="shop_id"))
     private List<DonutShop> shops;
 
+    public City() {
+        // no-argument constructor
+    }
+
     public City(String name, String state) {
         this.name = name;
         this.state = state;

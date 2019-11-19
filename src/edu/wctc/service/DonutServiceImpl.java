@@ -36,10 +36,44 @@ public class DonutServiceImpl implements DonutService {
         }
 
         String fileName = imageFileService.saveFile(file, applicationPath, theDonut.getShop().getImageDirectory());
-
-        theDonut.setImageFilename(fileName);
+        if (fileName != null) {
+            theDonut.setImageFilename(fileName);
+        }
 
         // Delegate call to DAO
         donutDAO.saveDonut(theDonut);
+
+    }
+
+    @Override
+    @Transactional
+    public Donut getDonut(int theId) {
+        return donutDAO.getDonut(theId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteDonut(int theId) {
+        donutDAO.deleteDonut(theId);
+    }
+
+    @Override
+    @Transactional
+    public List<Donut> getDonutsByName(String theSearchTerm) {
+        return donutDAO.getDonutsByName(theSearchTerm);
+    }
+
+    @Override
+    public Donut getDonutAndReviews(int donutId) {
+        Donut aDonut = donutDAO.getDonut(donutId);
+
+        // Touch the first review to load the list
+        if (!aDonut.getReviews().isEmpty()) {
+            // Use the get method to force dependent objects to load
+            // Must be done while session is open
+            aDonut.getReviews().get(0);
+        }
+
+        return aDonut;
     }
 }

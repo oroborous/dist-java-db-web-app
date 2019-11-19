@@ -9,4 +9,10 @@ public interface DonutDAO {
     List<Donut> getDonuts();
 
     void saveDonut(Donut theDonut);
+
+    Donut getDonut(int theId);
+
+    void deleteDonut(int theId);
+
+    List<Donut> getDonutsByName(String theSearchTerm);
 }

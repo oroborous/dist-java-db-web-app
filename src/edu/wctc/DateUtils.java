@@ -25,4 +25,12 @@ public class DateUtils {
         // return today's date
         return new SimpleDateFormat(PATTERN).format(new Date());
     }
+
+    public static Date parseWebDate(String str) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(str);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
 }
