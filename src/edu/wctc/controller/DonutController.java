@@ -29,7 +29,7 @@ public class DonutController {
     @Autowired
     private DonutShopService donutShopService;
 
-    @GetMapping("/user/delete")
+    @GetMapping("/admin/delete")
     public String deleteDonut(@RequestParam("donutId") int theId) {
         // Delete the donut
         donutService.deleteDonut(theId);

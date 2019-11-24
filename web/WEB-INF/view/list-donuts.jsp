@@ -16,11 +16,13 @@
 
     <div id="content">
 
-        <!-- add donut button -->
-
-        <button class="add-button"
-                onclick="window.location.href='${contextPath}/donut/user/showAddDonutForm'; return false;">Add Donut
-        </button>
+        <!-- Only logged-in users can see this button -->
+        <security:authorize access="hasRole('USER')">
+            <!-- add donut button -->
+            <button class="add-button"
+                    onclick="window.location.href='${contextPath}/donut/user/showAddDonutForm'; return false;">Add Donut
+            </button>
+        </security:authorize>
 
         <!-- search form -->
         <form:form action="search" method="GET">
@@ -37,7 +39,11 @@
                 <th>Name</th>
                 <th>Calories</th>
                 <th>Date Reviewed</th>
-                <th>Action</th>
+
+                <!-- Don't show this column if not logged in -->
+                <security:authorize access="hasAnyRole('USER,ADMIN')">
+                    <th>Action</th>
+                </security:authorize>
             </tr>
             <c:forEach var="tempDonut" items="${donuts}">
 
@@ -48,7 +54,7 @@
                 </c:url>
 
                 <!-- construct a "delete" link with donut id -->
-                <c:url var="deleteLink" value="/donut/user/delete">
+                <c:url var="deleteLink" value="/donut/admin/delete">
                     <c:param name="donutId" value="${tempDonut.id}"/>
                 </c:url>
 
@@ -65,17 +71,23 @@
                     <td><a href="${reviewLink}">${tempDonut.name}</a></td>
                     <td>${tempDonut.calories}</td>
                     <td>${tempDonut.formattedDate}</td>
-                    <td>
-                        <!-- display the update link -->
-                        <a href="${updateLink}">Update</a>
-                        <!-- Only admin can delete -->
-                        <security:authorize access="hasRole('ROLE_ADMIN')">
-                        |
-                        <!-- display the delete link -->
-                        <a href="${deleteLink}"
-                           onclick="if (!confirm('Are you sure?')) return false">Delete</a>
-                        </security:authorize>
-                    </td>
+
+                    <!-- Don't show this column if not logged in -->
+                    <security:authorize access="hasAnyRole('USER,ADMIN')">
+                        <td>
+                            <!-- display the update link -->
+                            <a href="${updateLink}">Update</a>
+
+                            <!-- Only admin can delete -->
+                            <security:authorize access="hasRole('ADMIN')">
+                                |
+                                <!-- display the delete link -->
+                                <a href="${deleteLink}"
+                                   onclick="if (!confirm('Are you sure?')) return false">Delete</a>
+                            </security:authorize>
+                        </td>
+                    </security:authorize>
+
                 </tr>
             </c:forEach>
         </table>

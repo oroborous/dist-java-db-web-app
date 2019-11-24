@@ -18,8 +18,8 @@
     <!-- BEGIN SECURITY CONFIGURATION -->
 
     <security:http use-expressions="true" authentication-manager-ref="myAuthenticationManager" >
-        <security:intercept-url pattern="/donut/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/donut/user/**" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/donut/admin/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url pattern="/donut/user/**" access="hasRole('USER')"/>
         <security:intercept-url pattern="/resources/**" access="permitAll()"/>
         <security:intercept-url pattern="/**" access="permitAll()" />
 
@@ -39,14 +39,16 @@
     <security:authentication-manager id="myAuthenticationManager" >
         <security:authentication-provider>
             <security:jdbc-user-service data-source-ref="myDataSource"/>
-            <security:password-encoder hash="bcrypt" />
+            <security:password-encoder ref="bcryptEncoder" />
             <!--<security:user-service id="myUserService">
-                <security:user name="user" password="p" authorities="ROLE_USER"/>
-                <security:user name="admin" password="p" authorities="ROLE_USER,ROLE_ADMIN"/>
+                <security:user name="user" password="p" authorities="USER"/>
+                <security:user name="admin" password="p" authorities="USER,ADMIN"/>
             </security:user-service>-->
         </security:authentication-provider>
     </security:authentication-manager>
 
+    <!-- Password hashing algorithm -->
+    <bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
     <!-- END SECURITY CONFIGURATION -->
 
