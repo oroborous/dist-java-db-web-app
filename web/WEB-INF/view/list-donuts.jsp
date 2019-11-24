@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
@@ -67,10 +68,13 @@
                     <td>
                         <!-- display the update link -->
                         <a href="${updateLink}">Update</a>
+                        <!-- Only admin can delete -->
+                        <security:authorize access="hasRole('ROLE_ADMIN')">
                         |
                         <!-- display the delete link -->
                         <a href="${deleteLink}"
                            onclick="if (!confirm('Are you sure?')) return false">Delete</a>
+                        </security:authorize>
                     </td>
                 </tr>
             </c:forEach>
