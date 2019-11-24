@@ -20,11 +20,7 @@
     </div>
 </div>
 
-<div style="clear: both;">
-    <p>
-        <a href="${contextPath}/donut/list">Back to List</a>
-    </p>
-</div>
+<%@ include file="/WEB-INF/view/includes/footer.jsp" %>
 </div>
 </body>
 </html>

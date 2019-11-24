@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/view/includes/header.jsp" />
+<%@ include file="/WEB-INF/view/includes/header.jsp" %>
 
 <div id="container">
 
@@ -79,8 +79,6 @@
     </div>
 
 </div>
-
-<jsp:include page="/WEB-INF/view/includes/footer.jsp"/>
 
 </body>
 </html>

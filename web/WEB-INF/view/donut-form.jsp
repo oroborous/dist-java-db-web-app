@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/view/includes/header.jsp"/>
+<%@ include file="/WEB-INF/view/includes/header.jsp" %>
 
 <div id="container">
 
@@ -63,7 +63,7 @@
             </table>
         </form:form>
 
-        <jsp:include page="/WEB-INF/view/includes/footer.jsp"/>
+        <%@ include file="/WEB-INF/view/includes/footer.jsp" %>
 
     </div>
 </div>

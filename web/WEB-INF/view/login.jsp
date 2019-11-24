@@ -29,7 +29,7 @@
                 </c:if>
                 <tr>
                     <td><label>Username</label></td>
-                    <td><input type="text" name="username" value="u"></td> <!-- Spring expects this to have name="username" -->
+                    <td><input type="text" name="username" value="user"></td> <!-- Spring expects this to have name="username" -->
                 </tr>
                 <tr>
                     <td><label>Password</label></td>
@@ -50,11 +50,7 @@
         </form:form>
     </div>
 
-    <div style="clear: both;">
-        <p>
-            <a href="${contextPath}/donut/list">Back to List</a>
-        </p>
-    </div>
+    <%@ include file="/WEB-INF/view/includes/footer.jsp" %>
 </div>
 </body>
 </html>

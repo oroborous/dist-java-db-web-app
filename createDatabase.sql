@@ -192,22 +192,32 @@ values (3, 2);
 insert into donut_shop_city (city_id, shop_id)
 values (5, 2);
 
-create table "USER"
+create table USERS
 (
-    user_id int generated always as identity
-        constraint user_pk
-            primary key,
-    username varchar(20) not null,
-    password varchar(100) not null,
-    password_plain_text varchar(20) not null
+    username varchar(50) not null constraint user_pk primary key ,
+    password varchar(60) not null,
+    enabled smallint
 );
 
-create unique index user_username_uindex
-    on "USER" (username);
+create unique index users_username_uindex
+    on USERS (username);
 
-create table USER_ROLE
+create table AUTHORITIES
 (
-    user_id int         not null
-        references "USER" (user_id),
-    role    varchar(20) not null
+    username varchar(50) not null
+        references USERS (username),
+    authority    varchar(50) not null
 );
+
+--insert into USERS values ('user', 'p', 1);
+
+insert into USERS values ('user', '$2a$10$VXL.L95B8xtiU2pQvW25fuPtzBLy3xJxjtjX77bc6SMNJ2FUNjht6', 1);
+
+
+--insert into USERS values ('admin', 'p', 1);
+
+insert into USERS values ('admin', '$2a$10$8Z054xfJA1IdPqJbCop6culYGpY7qAiUuSrdaUZfvfxoNHwTew00u', 1);
+
+insert into AUTHORITIES values ('user', 'ROLE_USER');
+insert into AUTHORITIES values ('admin', 'ROLE_USER');
+insert into AUTHORITIES values ('admin', 'ROLE_ADMIN');

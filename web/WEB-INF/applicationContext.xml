@@ -38,18 +38,15 @@
 
     <security:authentication-manager id="myAuthenticationManager" >
         <security:authentication-provider>
-            <security:user-service id="myUserService">
+            <security:jdbc-user-service data-source-ref="myDataSource"/>
+            <security:password-encoder hash="bcrypt" />
+            <!--<security:user-service id="myUserService">
                 <security:user name="user" password="p" authorities="ROLE_USER"/>
                 <security:user name="admin" password="p" authorities="ROLE_USER,ROLE_ADMIN"/>
-            </security:user-service>
+            </security:user-service>-->
         </security:authentication-provider>
     </security:authentication-manager>
 
-
-
-    <bean id="encoder"
-          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
-    </bean>
 
     <!-- END SECURITY CONFIGURATION -->
 
