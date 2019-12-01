@@ -192,15 +192,23 @@ values (3, 2);
 insert into donut_shop_city (city_id, shop_id)
 values (5, 2);
 
+-- drop table AUTHORITIES;
+
+-- drop table USERS;
+
 create table USERS
 (
-    username varchar(50) not null constraint user_pk primary key ,
+    user_id int generated always as identity,
+    username varchar(50) not null constraint user_pk primary key,
     password varchar(60) not null,
-    enabled smallint
+    enabled smallint,
+    first_name varchar(50),
+    last_name varchar(50),
+    email varchar(50)
 );
 
-create unique index users_username_uindex
-    on USERS (username);
+create unique index users_userid_uindex
+    on USERS (user_id);
 
 create table AUTHORITIES
 (
@@ -209,15 +217,14 @@ create table AUTHORITIES
     authority    varchar(50) not null
 );
 
---insert into USERS values ('user', 'p', 1);
+-- password is 'p' in bcrypt form
+-- 1 is enabled, 0 is disabled
+insert into USERS (username, password, enabled, first_name, last_name, email)
+values ('user', '$2a$10$VXL.L95B8xtiU2pQvW25fuPtzBLy3xJxjtjX77bc6SMNJ2FUNjht6', 0, 'Stacy', 'Read', 'sread@wctc.edu');
 
-insert into USERS values ('user', '$2a$10$VXL.L95B8xtiU2pQvW25fuPtzBLy3xJxjtjX77bc6SMNJ2FUNjht6', 1);
+insert into USERS (username, password, enabled, first_name, last_name, email)
+values ('admin', '$2a$10$VXL.L95B8xtiU2pQvW25fuPtzBLy3xJxjtjX77bc6SMNJ2FUNjht6', 1, 'Hello', 'Kitty', 'hkitty@wctc.edu');
 
-
---insert into USERS values ('admin', 'p', 1);
-
-insert into USERS values ('admin', '$2a$10$8Z054xfJA1IdPqJbCop6culYGpY7qAiUuSrdaUZfvfxoNHwTew00u', 1);
-
-insert into AUTHORITIES values ('user', 'ROLE_USER');
-insert into AUTHORITIES values ('admin', 'ROLE_USER');
-insert into AUTHORITIES values ('admin', 'ROLE_ADMIN');
+insert into AUTHORITIES values ('user', 'USER');
+insert into AUTHORITIES values ('admin', 'USER');
+insert into AUTHORITIES values ('admin', 'ADMIN');
